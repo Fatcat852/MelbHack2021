@@ -1,4 +1,4 @@
-# melhack2021
+# Fitnet web app
 
 This is our project submission for the Melbourne Hackathon 2021.
 
