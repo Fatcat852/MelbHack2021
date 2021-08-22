@@ -1,0 +1,32 @@
+<!-- Button trigger modal -->
+<!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">-->
+<!--  Launch demo modal-->
+<!--</button>-->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal-{{ routine.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{ "@"+routine.author.user_name }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h4 style="text-align:center">{{ routine.name }}</h4>
+        <div style="display:flex; justify-content:space-between; padding-top:20px; padding-bottom:20px"">
+          <h5 style="text-align:left">Type: {{ routine.type }}</h5>
+          <h5 style="text-align:left">Duration: {{ (routine.duration)}} minutes</h5>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding-top:20px; padding-bottom:20px"">
+          <h5 style="text-align:left">Equipment: {{ routine.equipment }}</h5>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding-top:20px; padding-bottom:50px"">
+          <h5 style="text-align:justify">Exercises: {{ routine.exercises }}</h5>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

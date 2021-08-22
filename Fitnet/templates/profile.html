@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% block title %}
+  <title>Home Feed</title>
+{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-2">
+        <div class="d-flex wrapper">
+            <!-- Sidebar -->
+            <nav id="sidebar">
+                <ul class="list-unstyled components text-center">
+                    <li class="px-4 py-5">
+                        <a href="{{ url_for('home') }}">Feed</a>
+                    </li>
+                    <li class="px-4 py-5">
+                        <a href="{{ url_for('profile') }}">My routines</a>
+                    </li>
+                    <li class="mx-4 py-5">
+                        <a href="{{ url_for('routines') }}">Create a Routine</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="container-1 text-dark">
+            <div class="row">
+                <div class="col-xl-8">
+                    <div class="container">
+                        {% if current_user != user %}
+                            <h1> {{ user.user_name + "'s Workouts" }} </h1>
+                        {% else %}
+                            <h1> My Workouts </h1>
+                        {% endif %}
+                        <div class="row-md">
+
+                            {% with routines = user.post %}
+                            {% for routine in routines %}
+                            {% include 'modal_routine.html' %}
+                            <div class="col">
+                                <div class="card my-5">
+                                    <div class="card-header" style="display:flex; justify-content:space-between">
+                                        <h5 class="">{{ "@"+user.user_name }}</h5>
+                                        <div class="btn-group">
+                                          <button type="button" class="btn btn-danger dropdown-toggle btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Action
+                                          </button>
+                                          <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/delete/{{ routine.id }}">Delete</a></li>
+                                            <li><a class="dropdown-item" href="/update/{{ routine.id }}">Update</a></li>
+                                          </ul>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ routine.name }}</h5>
+                                        <p class="card-text">...description
+                                              <a data-bs-toggle="modal" data-bs-target="#exampleModal-{{ routine.id }}" class="dropdown-toggle text-primary ms-3" href="#" role="button" id="dropdownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                See More
+                                              </a>
+                                        </p>
+<!--                                        <a href="#" class="btn btn-primary">Like</a>-->
+                                        {% if current_user.has_liked_post(routine) %}
+                                          <a class="btn btn-primary" href="{{ url_for('like_action', post_id=routine.id, action='unlike') }}">Unlike</a>
+                                        {% else %}
+                                          <a class="btn btn-primary" href="{{ url_for('like_action', post_id=routine.id, action='like') }}">Like</a>
+                                        {% endif %}
+                                        {{ routine.likes.count() }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% endwith%}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card my-5">
+                        {% if current_user != user %}
+                        <h5 class="card-header">People {{ user.user_name }} follows</h5>
+                        {% else %}
+                        <h5 class="card-header">People I follows</h5>
+                        {% endif %}
+                        <div class="card-body">
+                            <ul>
+                                {% with followed = user.followed.all() %}
+                                {% for person in followed %}
+                                <li><a class="dropdown-item" href="/profile/{{ person.user_name }}">{{ '@'+ person.user_name }}</a></li>
+                                {% endfor %}
+                                {% endwith%}
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Poppins:200i,400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@1,600&display=swap');
+
+:root {
+  --color-white: #f3f3f3;
+  --color-darkblue: #00008B;
+  --color-darkblue-alpha: rgba(27, 27, 50, 0.8);
+  --color-green: #37af65;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--color-white);
+  margin: 0;
+}
+
+/* mobile friendly alternative to using background-attachment: fixed */
+body::before {
+  content: '';
+  position: fixed;
+  top: 10px;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  background-image: linear-gradient(
+      115deg,
+      rgba(240, 240, 240, 0.7),
+      rgba(180, 180, 180, 0.8)
+    ),
+    url("https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1336&q=80");
+  background-size: cover;
+  background-repeat: no-repeat;
+<!--  background-position: center;-->
+}
+
+label {
+  display: flex;
+  align-items: center;
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+input,
+button,
+select,
+textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+button {
+  border: none;
+}
+
+.container {
+  width: 100%;
+  margin: 3.125rem auto 0 auto;
+}
+
+.container-1 {
+  width: 90%;
+  margin: 3.125rem auto auto 6rem;
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+.header {
+  padding: 0 0.625rem;
+  margin-bottom: 1.875rem;
+}
+
+.description {
+  font-style: italic;
+  font-weight: 200;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+}
+
+.clue {
+  margin-left: 0.25rem;
+  font-size: 0.9rem;
+  color: #e4e4e4;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #6d7fcc;
+}
+
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+#sidebar {
+    width: 250px;
+    position: fixed;
+    top: 54px;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    background: #7386D5;
+    color: black;
+    transition: all 0.3s;
+}
+
+#sidebar ul li a {
+    font-size: 2em;
+    display: block;
+}
+
+#sidebar ul li a:hover {
+    background: #fff;
+    color: black;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    background: #6d7fcc;
+    color: #fff;
+}
+
+h1 {
+  font-weight: 400;
+  line-height: 1.2;
+  font-family: 'Exo', sans-serif;
+}
+
+p {
+  font-size: 1.125rem;
+}
+
+h1,
+p {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+.dropdown-toggle {
+    color=
+}
+
+.btn-primary {
+    min-width: 6rem;
+    margin-right: 1rem;
+}
+
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
+
+        $('#dismiss, .overlay').on('click', function () {
+            // hide sidebar
+            $('#sidebar').removeClass('active');
+            // hide overlay
+            $('.overlay').removeClass('active');
+        });
+
+        $('#sidebarCollapse').on('click', function () {
+            // open sidebar
+            $('#sidebar').addClass('active');
+            // fade in the overlay
+            $('.overlay').addClass('active');
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+    });
+</script>
+
+{% endblock %}
