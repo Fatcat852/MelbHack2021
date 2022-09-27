@@ -13,3 +13,5 @@ Please create a virtual environment using python and import the modules in
 requirements.txt using pip install -r requirements.txt
 
 Then run app.py!
+
+** This is a forked copy of my teammate hoangnamtrinh's repository.
