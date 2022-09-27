@@ -2,6 +2,8 @@
 
 This is our project submission for the Melbourne Hackathon 2021.
 
+Visit https://devpost.com/software/fitnet for more information.
+
 To run our web program, you will need to have python 3 installed on your
 computer.
 
